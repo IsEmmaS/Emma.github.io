@@ -1,265 +1,325 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh">
 <head>
-  <meta charset="utf-8">
-  
-  
-  <title>Grad-CAM(基于梯度的类激活映射). | Emma&#39;s Blog</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="CAM(Class Activation Mapping) 用 Pytorch内容来自 文章: Grad-CAM: Visual Explanations from Deep Networks via Gradient-based Localization  作者提供的视频: YouTube video 作者提供的代码: grad-cam’s repo    我的实例图像仓库对来自Kaggle的疟">
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"isemmas.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.21.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="CAM(Class Activation Mapping) 用 Pytorch内容来自 文章: Grad-CAM: Visual Explanations from Deep Networks via Gradient-based Localization">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Grad-CAM(基于梯度的类激活映射).">
-<meta property="og:url" content="http://example.com/2024/10/20/CAM/index.html">
+<meta property="og:url" content="https://isemmas.github.io/2024/10/20/CAM/index.html">
 <meta property="og:site_name" content="Emma&#39;s Blog">
-<meta property="og:description" content="CAM(Class Activation Mapping) 用 Pytorch内容来自 文章: Grad-CAM: Visual Explanations from Deep Networks via Gradient-based Localization  作者提供的视频: YouTube video 作者提供的代码: grad-cam’s repo    我的实例图像仓库对来自Kaggle的疟">
+<meta property="og:description" content="CAM(Class Activation Mapping) 用 Pytorch内容来自 文章: Grad-CAM: Visual Explanations from Deep Networks via Gradient-based Localization">
 <meta property="og:locale">
-<meta property="og:image" content="http://example.com/2024/10/20/CAM/CAM/Parasitized.png">
-<meta property="og:image" content="http://example.com/2024/10/20/CAM/CAM/Parasitized_1.png">
-<meta property="og:image" content="http://example.com/2024/10/20/CAM/CAM/Parasitized_2.png">
-<meta property="og:image" content="http://example.com/2024/10/20/CAM/CAM/original.jpg">
-<meta property="og:image" content="http://example.com/2024/10/20/CAM/CAM/cat.jpg">
-<meta property="og:image" content="http://example.com/2024/10/20/CAM/CAM/dog.jpg">
+<meta property="og:image" content="https://isemmas.github.io/2024/10/20/CAM/Parasitized.png">
+<meta property="og:image" content="https://isemmas.github.io/2024/10/20/CAM/Parasitized_1.png">
+<meta property="og:image" content="https://isemmas.github.io/2024/10/20/CAM/Parasitized_2.png">
+<meta property="og:image" content="https://isemmas.github.io/2024/10/20/CAM/original.jpg">
+<meta property="og:image" content="https://isemmas.github.io/2024/10/20/CAM/cat.jpg">
+<meta property="og:image" content="https://isemmas.github.io/2024/10/20/CAM/dog.jpg">
 <meta property="article:published_time" content="2024-10-20T07:26:00.000Z">
-<meta property="article:modified_time" content="2024-10-20T07:26:28.041Z">
+<meta property="article:modified_time" content="2024-10-20T07:52:31.525Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="CV">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2024/10/20/CAM/CAM/Parasitized.png">
-  
-    <link rel="alternate" href="/atom.xml" title="Emma's Blog" type="application/atom+xml">
-  
-  
-    <link rel="shortcut icon" href="/favicon.png">
-  
-  
-  
-<link rel="stylesheet" href="/css/style.css">
+<meta name="twitter:image" content="https://isemmas.github.io/2024/10/20/CAM/Parasitized.png">
 
-  
-    
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
 
-  
-  
-<meta name="generator" content="Hexo 7.3.0"></head>
+<link rel="canonical" href="https://isemmas.github.io/2024/10/20/CAM/">
 
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">Emma&#39;s Blog</a>
-      </h1>
-      
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh","comments":true,"permalink":"https://isemmas.github.io/2024/10/20/CAM/","path":"2024/10/20/CAM/","title":"Grad-CAM(基于梯度的类激活映射)."}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Grad-CAM(基于梯度的类激活映射). | Emma's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
     </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Emma's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
         
-          <a class="main-nav-link" href="/">Home</a>
-        
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-        
-          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
-        
-        <a class="nav-icon nav-search-btn" title="Suche"><span class="fa fa-search"></span></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Suche"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#CAM-Class-Activation-Mapping-%E7%94%A8-Pytorch"><span class="nav-number">1.</span> <span class="nav-text">CAM(Class Activation Mapping) 用 Pytorch</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E5%AE%B9%E6%9D%A5%E8%87%AA"><span class="nav-number">1.1.</span> <span class="nav-text">内容来自</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%88%91%E7%9A%84%E5%AE%9E%E4%BE%8B%E5%9B%BE%E5%83%8F"><span class="nav-number">1.2.</span> <span class="nav-text">我的实例图像</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Sample-Images"><span class="nav-number">1.3.</span> <span class="nav-text">Sample Images</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8E%9F%E7%90%86"><span class="nav-number">1.4.</span> <span class="nav-text">原理</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description">Emma try to learn Blog create by doing this.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
       </div>
     </div>
-  </div>
-</header>
 
-      <div class="outer">
-        <section id="main"><article id="post-CAM" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/10/20/CAM/" class="article-date">
-  <time class="dt-published" datetime="2024-10-20T07:26:00.000Z" itemprop="datePublished">2024-10-20</time>
-</a>
     
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="p-name article-title" itemprop="headline name">
-      Grad-CAM(基于梯度的类激活映射).
-    </h1>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
   
 
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh">
+    <link itemprop="mainEntityOfPage" href="https://isemmas.github.io/2024/10/20/CAM/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Emma's Blog">
+      <meta itemprop="description" content="Emma try to learn Blog create by doing this.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Grad-CAM(基于梯度的类激活映射). | Emma's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Grad-CAM(基于梯度的类激活映射).
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
       
-        <h1 id="CAM-Class-Activation-Mapping-用-Pytorch"><a href="#CAM-Class-Activation-Mapping-用-Pytorch" class="headerlink" title="CAM(Class Activation Mapping) 用 Pytorch"></a><a target="_blank" rel="noopener" href="https://github.com/IsEmmaS/CAM-demo">CAM(Class Activation Mapping) 用 Pytorch</a></h1><h2 id="内容来自"><a href="#内容来自" class="headerlink" title="内容来自"></a>内容来自</h2><ul>
-<li>文章: <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1610.02391">Grad-CAM: Visual Explanations from Deep Networks via Gradient-based Localization</a> <ul>
+
+      <time title="Created: 2024-10-20 15:26:00 / Modified: 15:52:31" itemprop="dateCreated datePublished" datetime="2024-10-20T15:26:00+08:00">2024-10-20</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="CAM-Class-Activation-Mapping-用-Pytorch"><a href="#CAM-Class-Activation-Mapping-用-Pytorch" class="headerlink" title="CAM(Class Activation Mapping) 用 Pytorch"></a><a target="_blank" rel="noopener" href="https://github.com/IsEmmaS/CAM-demo">CAM(Class Activation Mapping) 用 Pytorch</a></h1><h2 id="内容来自"><a href="#内容来自" class="headerlink" title="内容来自"></a>内容来自</h2><ul>
+<li>文章: <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1610.02391">Grad-CAM: Visual Explanations from Deep Networks via Gradient-based Localization</a> </li>
+<li><span id="more"></span>
+
+<ul>
 <li>作者提供的视频: <a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=COjUB9Izk6E">YouTube video</a></li>
 <li>作者提供的代码: <a target="_blank" rel="noopener" href="https://github.com/ramprs/grad-cam/">grad-cam’s repo</a></li>
 </ul>
 </li>
 </ul>
 <h2 id="我的实例图像"><a href="#我的实例图像" class="headerlink" title="我的实例图像"></a>我的实例图像</h2><p>仓库对<a target="_blank" rel="noopener" href="https://www.kaggle.com/datasets/iarunava/cell-images-for-detecting-malaria">来自Kaggle的疟疾细胞数据</a>使用了一个简单的卷积神经网络进行分类, 训练后获得的梯度进行了可视化的处理的到了下图</p>
-<div align="center">
-    <img src="CAM/Parasitized.png"
-         width="300"
-         alt="Sample Show">
-    <img src="CAM/Parasitized_1.png"
-         width="300"
-         alt="Sample Show">
-     <img src="CAM/Parasitized_2.png"
-         width="300"
-         alt="Sample Show">
+<h2 id="Sample-Images"><a href="#Sample-Images" class="headerlink" title="Sample Images"></a>Sample Images</h2><div style="display: flex; justify-content: center; align-items: center;">
+  <style>.qtifllbflidh{width: 300px; height: auto; margin: 0 10px;}</style><img src="/2024/10/20/CAM/Parasitized.png" class="qtifllbflidh">
+  <style>.hggfyfnrvntg{width: 300px; height: auto; margin: 0 10px;}</style><img src="/2024/10/20/CAM/Parasitized_1.png" class="hggfyfnrvntg">
+  <style>.vsgiehruqbmx{width: 300px; height: auto; margin: 0 10px;}</style><img src="/2024/10/20/CAM/Parasitized_2.png" class="vsgiehruqbmx">
 </div>
 这些图像是在显微镜下观察血液涂片中的红细胞, 神经网络对感染疟疾的细胞的识别是对深红色斑点的识别(缺乏医学知识)
 
 <h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>这篇来自乔治亚理工学院的文章利用流入最后一个卷积层的梯度来产生一个粗略的定位图，这个定位图可以突出显示图像中对于预测特定概念（例如分类网络中的“狗”或标题网络中的一系列词）重要的区域。</p>
-<div align="center">
-    <img src="CAM/original.jpg"
-         width="200"
-         alt="Original">
-    <img src="CAM/cat.jpg"
-         width="200"
-         alt="Cat">
-     <img src="CAM/dog.jpg"
-         width="200"
-         alt="Dog">
+<div style="display: flex; justify-content: center; flex-wrap: wrap;">
+  <div style="margin: 10px;">
+    <style>.publglbcpyiv{width: 200px; height: auto;}</style><img src="/2024/10/20/CAM/original.jpg" class="publglbcpyiv">
+    <div style="text-align: center; margin-top: 5px;">Original</div>
+  </div>
+  <div style="margin: 10px;">
+    <style>.gbjnwkqftpok{width: 200px; height: auto;}</style><img src="/2024/10/20/CAM/cat.jpg" class="gbjnwkqftpok">
+    <div style="text-align: center; margin-top: 5px;">Cat</div>
+  </div>
+  <div style="margin: 10px;">
+    <style>.kglpedxdrowr{width: 200px; height: auto;}</style><img src="/2024/10/20/CAM/dog.jpg" class="kglpedxdrowr">
+    <div style="text-align: center; margin-top: 5px;">Dog</div>
+  </div>
+</div>
+这种方法不仅限于特定类型的CNN架构，而是可以广泛应用于各种CNN模型家族，包括具有全连接层的CNN（例如VGG）、用于结构化输出的CNN（例如图像描述）、以及在多模态输入任务（例如视觉问答）或强化学习中使用的CNN，所有这些应用都不需要对架构进行更改或重新训练。
+
+
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/CV/" rel="tag"># CV</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/10/20/This-is-my-first-artical/" rel="prev" title="This is my first artical.">
+                  <i class="fa fa-angle-left"></i> This is my first artical.
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
 </div>
 
-<p>这种方法不仅限于特定类型的CNN架构，而是可以广泛应用于各种CNN模型家族，包括具有全连接层的CNN（例如VGG）、用于结构化输出的CNN（例如图像描述）、以及在多模态输入任务（例如视觉问答）或强化学习中使用的CNN，所有这些应用都不需要对架构进行更改或重新训练。</p>
 
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2024/10/20/CAM/" data-id="cm2h9l9a900008f0f9gqx7fh3" data-title="Grad-CAM(基于梯度的类激活映射)." class="article-share-link"><span class="fa fa-share">Teilen</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CV/" rel="tag">CV</a></li></ul>
 
-    </footer>
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">John Doe</span>
   </div>
-  
-    
-<nav id="article-nav">
-  
-  
-    <a href="/2024/10/20/This-is-my-first-artical/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Älter</strong>
-      <div class="article-nav-title">This is my first artical.</div>
-    </a>
-  
-</nav>
-
-  
-</article>
-
-
-</section>
-        
-          <aside id="sidebar">
-  
-    
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
-    <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/CV/" rel="tag">CV</a></li></ul>
-    </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
   </div>
 
+    </div>
+  </footer>
 
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/CV/" style="font-size: 10px;">CV</a>
-    </div>
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
   </div>
 
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archiv</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/10/">October 2024</a></li></ul>
-    </div>
-  </div>
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
 
 
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">letzter Beitrag</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2024/10/20/CAM/">Grad-CAM(基于梯度的类激活映射).</a>
-          </li>
-        
-          <li>
-            <a href="/2024/10/20/This-is-my-first-artical/">This is my first artical.</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
 
   
-</aside>
-        
-      </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      
-      &copy; 2024 John Doe<br>
-      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
-    </div>
-  </div>
-</footer>
-
-    </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
-    
 
 
-<script src="/js/jquery-3.6.4.min.js"></script>
+
 
 
 
   
-<script src="/fancybox/jquery.fancybox.min.js"></script>
-
-
-
-
-<script src="/js/script.js"></script>
 
 
 
 
 
-  </div>
 </body>
 </html>
