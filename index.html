@@ -145,7 +145,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://isemmas.github.io/2024/10/20/FaceKeyPointsDetect/">
+    <link itemprop="mainEntityOfPage" href="https://isemmas.github.io/2024/10/22/FaceKeyPointsDetect/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -163,7 +163,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/10/20/FaceKeyPointsDetect/" class="post-title-link" itemprop="url">Untitled</a>
+          <a href="/2024/10/22/FaceKeyPointsDetect/" class="post-title-link" itemprop="url">关键点检测</a>
         </h2>
 
         <div class="post-meta-container">
@@ -173,8 +173,9 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">Posted on</span>
+      
 
-      <time title="Created: 2024-10-20 23:55:46" itemprop="dateCreated datePublished" datetime="2024-10-20T23:55:46+08:00">2024-10-20</time>
+      <time title="Created: 2024-10-22 13:21:00 / Modified: 13:22:42" itemprop="dateCreated datePublished" datetime="2024-10-22T13:21:00+08:00">2024-10-22</time>
     </span>
 
   
@@ -187,14 +188,15 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>使用VGG16进行面部关键点检测<br>面部关键点检测系统开发记<br>引言<br>在人工智能领域，面部关键点检测是一个基础而重要的任务。它涉及到识别面部的多个关键点，如眼睛、鼻子、嘴巴等的位置。这些关键点信息可以用于多种应用，比如人脸识别、表情分析等。在本项目中，我们使用深度学习技术，特别是VGG16模型，来实现这一功能。</p>
-<p>项目背景<br>随着深度学习技术的发展，面部关键点检测的准确性和效率都有了显著提升。VGG16作为一种经典的卷积神经网络，因其出色的特征提取能力而被广泛应用于图像识别任务中。本项目旨在利用VGG16模型来实现面部关键点的自动检测。</p>
-<p>项目实现<br>项目的核心是FaceKeyPointsDetectVGG.py脚本，其中定义了模型结构和训练流程。我们首先对VGG16模型进行了微调，以适应面部关键点检测的任务。通过替换模型的最后几层，我们添加了自定义的卷积层、池化层和全连接层，以输出关键点的预测值。</p>
-<p>数据预处理方面，我们通过FacesDataset类来加载和处理图像数据。这个类继承自PyTorch的Dataset类，并提供了图像的归一化处理和关键点的提取。</p>
-<p>训练过程中，我们使用了L1损失函数来计算预测关键点与实际关键点之间的差异，并采用Adam优化器来更新模型的权重。</p>
-<p>项目成果<br>经过多次迭代训练，我们的模型在测试集上取得了良好的性能。通过drawPic.py脚本，我们可以直观地看到模型预测的关键点与实际标注的对比，验证了模型的准确性。</p>
-<p>未来工作<br>尽管当前的模型已经能够满足基本的面部关键点检测需求，但仍有改进的空间。未来，我们计划引入更多的数据增强技术，以提高模型的泛化能力。同时，我们也在探索使用更先进的网络结构，如ResNet或DenseNet，来进一步提升检测的准确性。</p>
-
+          <h1 id="使用VGG16进行面部关键点检测"><a href="#使用VGG16进行面部关键点检测" class="headerlink" title="使用VGG16进行面部关键点检测"></a>使用VGG16进行面部关键点检测</h1><h2 id="面部关键点检测系统开发记录"><a href="#面部关键点检测系统开发记录" class="headerlink" title="面部关键点检测系统开发记录"></a>面部关键点检测系统开发记录</h2>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2024/10/22/FaceKeyPointsDetect/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -248,9 +250,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">Posted on</span>
-      
 
-      <time title="Created: 2024-10-20 15:26:00 / Modified: 16:02:51" itemprop="dateCreated datePublished" datetime="2024-10-20T15:26:00+08:00">2024-10-20</time>
+      <time title="Created: 2024-10-20 15:26:00" itemprop="dateCreated datePublished" datetime="2024-10-20T15:26:00+08:00">2024-10-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-10-22 13:22:25" itemprop="dateModified" datetime="2024-10-22T13:22:25+08:00">2024-10-22</time>
     </span>
 
   
@@ -263,9 +271,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="CAM-Class-Activation-Mapping-用-Pytorch"><a href="#CAM-Class-Activation-Mapping-用-Pytorch" class="headerlink" title="CAM(Class Activation Mapping) 用 Pytorch"></a><a target="_blank" rel="noopener" href="https://github.com/IsEmmaS/CAM-demo">CAM(Class Activation Mapping) 用 Pytorch</a></h1><h2 id="内容来自"><a href="#内容来自" class="headerlink" title="内容来自"></a>内容来自</h2><ul>
-<li>文章: <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1610.02391">Grad-CAM: Visual Explanations from Deep Networks via Gradient-based Localization</a> </li>
-<li>
+          <h1 id="CAM-Class-Activation-Mapping-用-Pytorch"><a href="#CAM-Class-Activation-Mapping-用-Pytorch" class="headerlink" title="CAM(Class Activation Mapping) 用 Pytorch"></a><a target="_blank" rel="noopener" href="https://github.com/IsEmmaS/CAM-demo">CAM(Class Activation Mapping) 用 Pytorch</a></h1>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2024/10/20/CAM/#more" rel="contents">
